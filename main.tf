@@ -7,6 +7,7 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.web_access.id]
   ami                    = "ami-0a261c0e5f51090b1"
   user_data              = file("install_webserver.sh")
+  subnet_id              = module.vpc.public_subnets[0]
 }
 
 resource "aws_security_group" "web_access" {
