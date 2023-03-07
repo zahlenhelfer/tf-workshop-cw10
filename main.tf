@@ -3,9 +3,10 @@ provider "aws" {
 }
 
 resource "aws_instance" "web" {
-  instance_type = "t2.micro"
-  ami           = "ami-0a261c0e5f51090b1"
-  user_data     = file("install_webserver.sh")
+  instance_type   = "t2.micro"
+  security_groups = [aws_security_group.web_access.name]
+  ami             = "ami-0a261c0e5f51090b1"
+  user_data       = file("install_webserver.sh")
 }
 
 
@@ -21,6 +22,13 @@ resource "aws_security_group" "web_access" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
