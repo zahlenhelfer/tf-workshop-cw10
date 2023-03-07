@@ -3,16 +3,16 @@ provider "aws" {
 }
 
 resource "aws_instance" "web" {
-  instance_type   = "t2.micro"
-  security_groups = [aws_security_group.web_access.name]
-  ami             = "ami-0a261c0e5f51090b1"
-  user_data       = file("install_webserver.sh")
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.web_access.id]
+  ami                    = "ami-0a261c0e5f51090b1"
+  user_data              = file("install_webserver.sh")
 }
-
 
 resource "aws_security_group" "web_access" {
   name        = "web-security-group"
   description = "Terraform web security group"
+  vpc_id      = module.vpc.vpc_id
   egress {
     from_port   = 0
     to_port     = 0
